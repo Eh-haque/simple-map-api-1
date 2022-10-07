@@ -2,10 +2,13 @@ const express = require("express");
 const puppeteer = require("puppeteer");
 const tracingData = require("./tracing.json");
 const closest_match = require("closest-match");
+const cors = require("cors");
 
 require("./jobs");
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
 // async function appStart() {
 //     const browser = await puppeteer.launch({ devtools: true });
