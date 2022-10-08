@@ -14,6 +14,7 @@ let url =
 
 async function appStart() {
     const browser = await puppeteer.launch({
+        headless: true,
         devtools: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
