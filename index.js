@@ -13,7 +13,7 @@ let url =
     "https://gisweb.casey.vic.gov.au/IntraMaps90/ApplicationEngine/frontend/mapbuilder/yourproperty.htm?configId=243fbf74-7d66-4208-899d-91b1d08ff8bf&liteConfigId=b2af2973-160e-4664-8e96-fe701aeaa67f&title=WW91ciBQcm9wZXJ0eSBhbmQgUGxhbm5pbmc%3D";
 
 async function appStart() {
-    const browser = await puppeteer.launch({ devtools: true });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.tracing.start({
         categories: ["devtools.timeline"],
