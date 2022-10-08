@@ -1,5 +1,4 @@
 const express = require("express");
-const puppeteer = require("puppeteer");
 const cors = require("cors");
 
 // const tracingData = require("./tracing.json");
@@ -11,6 +10,7 @@ app.use(express.json());
 
 let chrome = {};
 let puppeteer;
+
 let url =
     "https://gisweb.casey.vic.gov.au/IntraMaps90/ApplicationEngine/frontend/mapbuilder/yourproperty.htm?configId=243fbf74-7d66-4208-899d-91b1d08ff8bf&liteConfigId=b2af2973-160e-4664-8e96-fe701aeaa67f&title=WW91ciBQcm9wZXJ0eSBhbmQgUGxhbm5pbmc%3D";
 
@@ -66,7 +66,6 @@ app.get("/api", async (req, res) => {
                 const substring = eventUrl.substring(
                     eventUrl.indexOf("IntraMapsSession=") + 17
                 );
-                console.log(substring);
 
                 return res.status(200).send({
                     title: await page.title(),
