@@ -1,10 +1,22 @@
+const { default: mongoose } = require("mongoose");
 const express = require("express");
+const dotenv = require("dotenv");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
+const connectDB = require("./config/database");
 
+// express app initialization
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// database connection with mongoose
+connectDB();
+
+const dbConnection = mongoose.connection;
+dbConnection.on("error", (err) => console.log(`Connection error ${err}`));
+dbConnection.once("open", () => console.log("Connected to DB!"));
 
 app.get("/", (req, res) => {
     res.status(200).send("welcome to map api");

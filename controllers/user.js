@@ -2,25 +2,34 @@ const User = require("../models/User");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { options } = require("../routes");
 
 exports.signUp = async (req, res, next) => {
     const errors = validationResult(req);
-    if (errors.length > 0)
+    if (errors.errors.length > 0)
         return res
             .status(500)
             .send({ error: errors, message: "Parameters validation failed" });
 
     try {
+        const checkUser = User.findOne({ email: req.body.email });
+        if (checkUser)
+            return res.status(401).send({ message: "User already exists" });
+
         const payload = {
             name: req.body.name,
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 10),
         };
 
-        res.send(payload);
+        const user = new User(payload);
+
+        const result = await user.save();
+        if (!result)
+            return res.status(401).send({ message: "Something went wrong" });
+
+        res.status(200).send({ message: "Sign up successful", user: result });
     } catch (error) {
-        res.status(404).send({
+        next({
             error: error,
             message: "Something went wrong",
         });
@@ -36,13 +45,13 @@ exports.signUp = async (req, res, next) => {
  */
 exports.logIn = async (req, res, next) => {
     const errors = validationResult(req);
-    if (errors.length > 0)
+    if (errors.errors.length > 0)
         return res
             .status(500)
             .send({ error: errors, message: "Parameters validation failed" });
 
     try {
-        const checkUser = User.findOne({ email: req.body.email });
+        const checkUser = await User.findOne({ email: req.body.email });
         if (checkUser) {
             const checkPassword = bcrypt.compareSync(
                 req.body.password,
@@ -70,7 +79,7 @@ exports.logIn = async (req, res, next) => {
             return res.status(401).send({ message: "Invalid user" });
         }
     } catch (error) {
-        res.status(404).send({
+        next({
             error: error,
             message: "Something went wrong",
         });
