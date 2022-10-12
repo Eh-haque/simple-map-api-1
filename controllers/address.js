@@ -49,36 +49,36 @@ exports.mapApi = async (req, res, next) => {
         const tracing = JSON.parse(await page.tracing.stop());
 
         // get session information
-        const events = tracing.traceEvents.filter(
-            (te) =>
-                te.name == "ResourceSendRequest" &&
-                te.args.data.url !== undefined
-        );
+        // const events = tracing.traceEvents.filter(
+        //     (te) =>
+        //         te.name == "ResourceSendRequest" &&
+        //         te.args.data.url !== undefined
+        // );
 
-        for await (const event of events) {
-            let eventUrl = event.args.data.url;
-            if (
-                eventUrl.includes("IntraMapsSession=") &&
-                !eventUrl.includes("IntraMapsSession=null")
-            ) {
-                const substring = eventUrl.substring(
-                    eventUrl.indexOf("IntraMapsSession=") + 17
-                );
-                console.log(substring);
+        // for await (const event of events) {
+        //     let eventUrl = event.args.data.url;
+        //     if (
+        //         eventUrl.includes("IntraMapsSession=") &&
+        //         !eventUrl.includes("IntraMapsSession=null")
+        //     ) {
+        //         const substring = eventUrl.substring(
+        //             eventUrl.indexOf("IntraMapsSession=") + 17
+        //         );
+        //         console.log(substring);
 
-                return res.status(200).send({
-                    title: title,
-                    session: substring,
-                });
-            }
-        }
+        //         return res.status(200).send({
+        //             title: title,
+        //             session: substring,
+        //         });
+        //     }
+        // }
 
-        await context.close();
+        // await context.close();
 
-        // res.send({
-        //     title: title,
-        //     tracing: tracing,
-        // });
+        res.send({
+            title: title,
+            tracing: tracing,
+        });
     } catch (err) {
         console.error(err);
         return res.status(400).send(null);
