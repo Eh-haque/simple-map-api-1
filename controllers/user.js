@@ -28,7 +28,7 @@ exports.signUp = async (req, res, next) => {
         if (!result)
             return res.status(401).send({ message: "Something went wrong" });
 
-        res.status(200).send({ message: "Sign up successful", user: result });
+        res.status(200).send({ message: "Signup successful", user: result });
     } catch (error) {
         next({
             error: error,
