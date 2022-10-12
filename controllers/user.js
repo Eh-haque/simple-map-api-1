@@ -12,23 +12,29 @@ exports.signUp = async (req, res, next) => {
         });
 
     try {
-        const checkUser = User.findOne({ email: req.body.email });
-        if (checkUser)
+        const checkUser = await User.findOne({ email: req.body.email });
+        if (checkUser) {
             return res.status(401).send({ message: "User already exists" });
+        } else {
+            const payload = {
+                name: req.body.name,
+                email: req.body.email,
+                password: bcrypt.hashSync(req.body.password, 10),
+            };
 
-        const payload = {
-            name: req.body.name,
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 10),
-        };
+            const user = new User(payload);
 
-        const user = new User(payload);
+            const result = await user.save();
+            if (!result)
+                return res
+                    .status(401)
+                    .send({ message: "Something went wrong" });
 
-        const result = await user.save();
-        if (!result)
-            return res.status(401).send({ message: "Something went wrong" });
-
-        res.status(200).send({ message: "Signup successful", user: result });
+            return res.status(200).send({
+                message: "Signup successful",
+                user: result,
+            });
+        }
     } catch (error) {
         next({
             error: error,
