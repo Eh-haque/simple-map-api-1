@@ -31,6 +31,9 @@ async function myFunction() {
 }
 myFunction();
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+
 exports.mapApi = async (req, res, next) => {
     try {
         const context = await browser.createIncognitoBrowserContext();
@@ -46,6 +49,7 @@ exports.mapApi = async (req, res, next) => {
             { waitUntil: "load", timeout: 0 }
         );
 
+        await sleep(10000)!
         const tracing = JSON.parse(await page.tracing.stop());
 
         // get session information
