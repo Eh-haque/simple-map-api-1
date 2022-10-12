@@ -31,7 +31,7 @@ exports.signUp = async (req, res, next) => {
                     .send({ message: "Something went wrong" });
 
             return res.status(200).send({
-                message: "Signup successful",
+                message: "Signup successful, Please login",
                 user: result,
             });
         }
