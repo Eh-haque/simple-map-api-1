@@ -4,8 +4,11 @@ const { body } = require("express-validator");
 const { mapApi } = require("../controllers/address");
 
 indexRouter.route("/signup").post(
-    body("name").isLength({ min: 3 }),
-    body("email").isEmail().normalizeEmail(),
+    body("name").isLength({ min: 3 }).withMessage("Please enter your name"),
+    body("email")
+        .isEmail()
+        .normalizeEmail()
+        .withMessage("Please enter your email address"),
     body("password")
         .isLength({ min: 6 })
         .withMessage("Please enter a password at least 6 character"),
