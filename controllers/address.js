@@ -20,7 +20,7 @@ exports.mapApi = async (req, res, next) => {
             // defaultViewport: chrome.defaultViewport,
             // executablePath: await chrome.executablePath,
             headless: true,
-            // devtools: true,
+            devtools: true,
             // ignoreHTTPSErrors: true,
         };
     }
