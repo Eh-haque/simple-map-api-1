@@ -9,29 +9,34 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
     puppeteer = require("puppeteer");
 }
 
+let options = {};
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
+        // args: [
+        //     ...chrome.args,
+        //     "--hide-scrollbars",
+        //     "--disable-web-security",
+        // ],
+        // defaultViewport: chrome.defaultViewport,
+        // executablePath: await chrome.executablePath,
+        headless: true,
+        // devtools: true,
+        // ignoreHTTPSErrors: true,
+    };
+}
+
+let browser;
+async function myFunction() {
+    return (browser = await puppeteer.launch());
+}
+myFunction();
+
 exports.mapApi = async (req, res, next) => {
-    let options = {};
-    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-        options = {
-            // args: [
-            //     ...chrome.args,
-            //     "--hide-scrollbars",
-            //     "--disable-web-security",
-            // ],
-            // defaultViewport: chrome.defaultViewport,
-            // executablePath: await chrome.executablePath,
-            headless: true,
-            // devtools: true,
-            // ignoreHTTPSErrors: true,
-        };
-    }
-
     try {
-        let browser = await puppeteer.launch(options);
-
-        let page = await browser.newPage();
+        const context = await browser.createIncognitoBrowserContext();
+        const page = await context.newPage();
         const title = await page.title();
-        
+
         await page.tracing.start({
             categories: ["devtools.timeline"],
         });
@@ -68,7 +73,7 @@ exports.mapApi = async (req, res, next) => {
         //     }
         // }
 
-        await browser.close();
+        await context.close();
 
         res.send({
             title: title,
