@@ -6,9 +6,10 @@ const jwt = require("jsonwebtoken");
 exports.signUp = async (req, res, next) => {
     const errors = validationResult(req);
     if (errors.errors.length > 0)
-        return res
-            .status(500)
-            .send({ error: errors.errors[0].msg, message: "Parameters validation failed" });
+        return res.status(500).send({
+            error: "Parameters validation failed",
+            message: errors.errors[0].msg,
+        });
 
     try {
         const checkUser = User.findOne({ email: req.body.email });
@@ -46,9 +47,10 @@ exports.signUp = async (req, res, next) => {
 exports.logIn = async (req, res, next) => {
     const errors = validationResult(req);
     if (errors.errors.length > 0)
-        return res
-            .status(500)
-            .send({ error: errors.errors[0].msg, message: "Parameters validation failed" });
+        return res.status(500).send({
+            error: "Parameters validation failed",
+            message: errors.errors[0].msg,
+        });
 
     try {
         const checkUser = await User.findOne({ email: req.body.email });
