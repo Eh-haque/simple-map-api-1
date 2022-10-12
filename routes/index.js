@@ -30,6 +30,6 @@ indexRouter
         logIn
     );
 
-indexRouter.route("/map_session").post(mapApi);
+indexRouter.route("/map_session").get(mapApi);
 
 module.exports = indexRouter;
