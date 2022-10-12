@@ -30,6 +30,8 @@ exports.mapApi = async (req, res, next) => {
         let browser = await puppeteer.launch(options);
 
         let page = await browser.newPage();
+        const title = await page.title();
+        
         await page.tracing.start({
             categories: ["devtools.timeline"],
         });
@@ -66,8 +68,10 @@ exports.mapApi = async (req, res, next) => {
         //     }
         // }
 
+        await browser.close();
+
         res.send({
-            title: await page.title(),
+            title: title,
             tracing: tracing,
         });
     } catch (err) {
