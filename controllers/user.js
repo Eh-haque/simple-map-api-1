@@ -8,7 +8,7 @@ exports.signUp = async (req, res, next) => {
     if (errors.errors.length > 0)
         return res
             .status(500)
-            .send({ error: errors, message: "Parameters validation failed" });
+            .send({ error: errors.errors[0].msg, message: "Parameters validation failed" });
 
     try {
         const checkUser = User.findOne({ email: req.body.email });
@@ -48,7 +48,7 @@ exports.logIn = async (req, res, next) => {
     if (errors.errors.length > 0)
         return res
             .status(500)
-            .send({ error: errors, message: "Parameters validation failed" });
+            .send({ error: errors.errors[0].msg, message: "Parameters validation failed" });
 
     try {
         const checkUser = await User.findOne({ email: req.body.email });

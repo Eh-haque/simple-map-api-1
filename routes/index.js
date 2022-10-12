@@ -17,8 +17,13 @@ indexRouter.route("/signup").post(
 indexRouter
     .route("/login")
     .post(
-        body("email").isEmail().normalizeEmail(),
-        body("password").isLength({ min: 6 }),
+        body("email")
+            .isEmail()
+            .normalizeEmail()
+            .withMessage("Please enter your email address"),
+        body("password")
+            .isLength({ min: 6 })
+            .withMessage("Please enter your password"),
         logIn
     );
 
