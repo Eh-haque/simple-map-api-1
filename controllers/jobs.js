@@ -37,7 +37,7 @@ myFunction();
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // automated
-exports.scheduleJob = schedule.scheduleJob("*/30 * * * *", async function () {
+exports.scheduleJob = schedule.scheduleJob("*/20 * * * *", async function () {
     const context = await browser.createIncognitoBrowserContext();
     const page = await context.newPage();
     // const title = await page.title();
@@ -75,6 +75,7 @@ exports.scheduleJob = schedule.scheduleJob("*/30 * * * *", async function () {
                 { token: substring }
             );
 
+            return;
             // if (result.modifiedCount > 0) {
             //     return res.status(200).send({
             //         session: substring,
