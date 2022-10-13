@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const indexRouter = require("./routes/index");
 const connectDB = require("./config/database");
+require("./controllers/jobs");
 
 // express app initialization
 dotenv.config();

@@ -1,7 +1,7 @@
 const indexRouter = require("express").Router();
 const { signUp, logIn } = require("../controllers/user");
 const { body } = require("express-validator");
-const { mapApi } = require("../controllers/address");
+const { mapApi, getToken } = require("../controllers/address");
 
 indexRouter.route("/signup").post(
     body("name").isLength({ min: 3 }).withMessage("Please enter your name"),
@@ -31,5 +31,6 @@ indexRouter
     );
 
 indexRouter.route("/map_session").get(mapApi);
+indexRouter.route("/token").get(getToken);
 
 module.exports = indexRouter;
