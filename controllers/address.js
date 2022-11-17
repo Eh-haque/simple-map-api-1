@@ -104,7 +104,7 @@ exports.mapApi = async (req, res, next) => {
     }
 };
 
-// automated
+// automated not
 // exports.scheduleJob = schedule.scheduleJob(
 //     "*/30 * * * *",
 //     async function (req, res, next) {
