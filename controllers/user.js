@@ -1,20 +1,20 @@
-const User = require("../models/User");
-const { validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const User = require('../models/User');
+const { validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 exports.signUp = async (req, res, next) => {
     const errors = validationResult(req);
     if (errors.errors.length > 0)
         return res.status(500).send({
-            error: "Parameters validation failed",
+            error: 'Parameters validation failed',
             message: errors.errors[0].msg,
         });
 
     try {
         const checkUser = await User.findOne({ email: req.body.email });
         if (checkUser) {
-            return res.status(401).send({ message: "User already exists" });
+            return res.status(401).send({ message: 'User already exists' });
         } else {
             const payload = {
                 name: req.body.name,
@@ -25,20 +25,32 @@ exports.signUp = async (req, res, next) => {
             const user = new User(payload);
 
             const result = await user.save();
-            if (!result)
+
+            if (result) {
+                const jwtPayload = {
+                    email: result.email,
+                    _id: result._id,
+                };
+                const secretKey =
+                    'askdfj@skaldjf%klasdfjskmdaufanioerucmias;lkasfsadf';
+
+                const token = jwt.sign(jwtPayload, secretKey, {
+                    expiresIn: '30d',
+                });
+
+                return res
+                    .status(200)
+                    .send({ message: 'Signup successful', token: token });
+            } else {
                 return res
                     .status(401)
-                    .send({ message: "Something went wrong" });
-
-            return res.status(200).send({
-                message: "Signup successful, Please login",
-                user: result,
-            });
+                    .send({ message: 'Something went wrong' });
+            }
         }
     } catch (error) {
         next({
             error: error,
-            message: "Something went wrong",
+            message: 'Something went wrong',
         });
     }
 };
@@ -54,7 +66,7 @@ exports.logIn = async (req, res, next) => {
     const errors = validationResult(req);
     if (errors.errors.length > 0)
         return res.status(500).send({
-            error: "Parameters validation failed",
+            error: 'Parameters validation failed',
             message: errors.errors[0].msg,
         });
 
@@ -71,25 +83,25 @@ exports.logIn = async (req, res, next) => {
                     _id: checkUser._id,
                 };
                 const secretKey =
-                    "askdfj@skaldjf%klasdfjskmdaufanioerucmias;lkasfsadf";
+                    'askdfj@skaldjf%klasdfjskmdaufanioerucmias;lkasfsadf';
 
                 const token = jwt.sign(payload, secretKey, {
-                    expiresIn: "30d",
+                    expiresIn: '30d',
                 });
 
                 return res
                     .status(200)
-                    .send({ message: "Login successful", token: token });
+                    .send({ message: 'Login successful', token: token });
             } else {
-                return res.status(401).send({ message: "Invalid password" });
+                return res.status(401).send({ message: 'Invalid password' });
             }
         } else {
-            return res.status(401).send({ message: "Invalid user" });
+            return res.status(401).send({ message: 'Invalid user' });
         }
     } catch (error) {
         next({
             error: error,
-            message: "Something went wrong",
+            message: 'Something went wrong',
         });
     }
 };
